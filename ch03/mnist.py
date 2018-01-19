@@ -24,18 +24,22 @@ def create_network():
     In the textbook, this method gets parameters from file.
     """
     network = {}
+    dim0 = 784  # 28x28 (pixels in an image)
+    dim1 = 100  # chosen arbitrarily
+    dim2 = 50  # chosen arbitrarily
+    dim3 = 10  # the number of kinds of labels (0, 1, .. , 9)
 
-    # layer-1: (784, 1)-matrix -> (100, 1)-matrix (100 is  chosen arbitrarily)
-    network['W1'] = np.random.rand(784, 100)
-    network['b1'] = np.random.rand(100)
+    # layer-1: (dim0, 1)-matrix -> (dim1, 1)-matrix
+    network['W1'] = np.random.rand(dim0, dim1)
+    network['b1'] = np.random.rand(dim1)
 
-    # layer-2: (100, 1)-matrix -> (50, 1)-matrix (50 is  chosen arbitrarily)
-    network['W2'] = np.random.rand(100, 50)
-    network['b2'] = np.random.rand(50)
+    # layer-2: (dim1, 1)-matrix -> (dim2, 1)-matrix
+    network['W2'] = np.random.rand(dim1, dim2)
+    network['b2'] = np.random.rand(dim2)
 
-    # layer-3: (50, 1)-matrix -> (10, 1)-matrix (10 is mandatory because the number of labels is 10)
-    network['W3'] = np.random.rand(50, 10)
-    network['b3'] = np.random.rand(10)
+    # layer-3: (dim2, 1)-matrix -> (dim3, 1)-matrix
+    network['W3'] = np.random.rand(dim2, dim3)
+    network['b3'] = np.random.rand(dim3)
     return network
 
 
