@@ -7,7 +7,7 @@ def softmax_with_overflow(x):
 
 
 def softmax(x):
-   """return softmax for the NumPy array: x.""" 
+    """return softmax for the NumPy array: x.""" 
     # constant for removing overflow
     c = np.max(x)
     numerators = np.exp(x - c)
