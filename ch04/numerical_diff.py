@@ -1,5 +1,6 @@
 # numerical differentiation
 
+import numpy as np
 
 def numerical_diff(f, x):
     """
@@ -37,7 +38,7 @@ def show(f, x, diff, diff_label, expected):
     actual = diff(f, x)
     epsilon = 1e-5
     message = ''
-    if abs(actual - expected) < epsilon:
+    if np.linalg.norm(actual - expected) < epsilon:
         message = 'correct'
     else:
         message = 'wrong'
