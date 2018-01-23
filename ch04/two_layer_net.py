@@ -1,10 +1,10 @@
 import sys
 import os
 sys.path.append(os.pardir)
-from cross_entropy_error import cross_entropy_error
+from cross_entropy_error_batch import cross_entropy_error
 from ch03.sigmoid import sigmoid
 from ch03.softmax import softmax
-from numerical_gradient import numerical_gradient
+from numerical_gradient_batch import numerical_gradient_batch
 import numpy as np
 
 
@@ -67,13 +67,14 @@ class TwoLayerNet:
         return num_hit / float(num_all)
 
     def numerical_gradient(self, x, t):
-        def loss_W(x): return self.loss(x, t)
+        # loss_W = lambda W: self.loss(x, t)
+        loss_W = lambda W: self.loss(x, t)
 
         grads = {}
-        grads['W1'] = numerical_gradient(loss_W, self.params['W1'])
-        grads['b1'] = numerical_gradient(loss_W, self.params['b1'])
-        grads['W2'] = numerical_gradient(loss_W, self.params['W2'])
-        grads['b2'] = numerical_gradient(loss_W, self.params['b2'])
+        grads['W1'] = numerical_gradient_batch(loss_W, self.params['W1'])
+        grads['b1'] = numerical_gradient_batch(loss_W, self.params['b1'])
+        grads['W2'] = numerical_gradient_batch(loss_W, self.params['W2'])
+        grads['b2'] = numerical_gradient_batch(loss_W, self.params['b2'])
         return grads
 
 
