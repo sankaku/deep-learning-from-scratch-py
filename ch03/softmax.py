@@ -7,7 +7,12 @@ def softmax_with_overflow(x):
 
 
 def softmax(x):
-    """return softmax for the NumPy array: x.""" 
+    """return softmax for the NumPy array: x."""
+    if x.ndim == 2: # mini-batch version
+        x = x.T
+        x = x - np.max(x, axis=0)
+        y = np.exp(x) / np.sum(np.exp(x), axis=0)
+        return y.T
     # constant for removing overflow
     c = np.max(x)
     numerators = np.exp(x - c)

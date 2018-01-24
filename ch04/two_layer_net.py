@@ -40,7 +40,7 @@ class TwoLayerNet:
         a1 = np.dot(x, W1) + b1
         z1 = sigmoid(a1)  # output of layer-1
         a2 = np.dot(z1, W2)
-        return softmax(a2)
+        return softmax(a2) # a2.shape is [butch_size, output_size]
 
     def loss(self, x, t):
         """
