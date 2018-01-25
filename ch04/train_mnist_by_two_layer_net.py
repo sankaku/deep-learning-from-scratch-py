@@ -4,6 +4,8 @@ sys.path.append(os.pardir)
 import numpy as np
 from dataset.mnist import load_mnist
 from ch04.two_layer_net import TwoLayerNet
+import matplotlib.pyplot as plt
+
 
 def train(batch_size, iterate_num, learning_rate):
     """
@@ -48,8 +50,20 @@ def train(batch_size, iterate_num, learning_rate):
     return network, losses
 
 
+def plot_losses(losses):
+    """
+    Plot `losses` to visualize the process of iterative learning
+    """
+    x = np.arange(0, len(losses))
+    y = losses
+    plt.plot(x, y)
+    plt.grid()
+    plt.show()
+
+
 if __name__ == '__main__':
     network, losses = train(100, 10000, 0.1)
     print('W1 = {0}, b1 = {1}, W2 = {2}, b2 = {3}'.format(
         network.params['W1'], network.params['b1'], network.params['W2'], network.params['b2']))
     print('losses = {0}'.format(losses))
+    plot_losses(losses)
