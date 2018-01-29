@@ -3,7 +3,6 @@
 import sys
 import os
 sys.path.append(os.pardir)
-from ch04.cross_entropy_error_batch import cross_entropy_error
 from ch03.sigmoid import sigmoid
 from ch03.softmax import softmax
 from ch04.numerical_gradient_batch import numerical_gradient_batch
@@ -47,10 +46,10 @@ class TwoLayerNet:
         x: input to this network(NumPy array)
         """
         x = self.layers['Affine1'].forward(
-            self.params['W1'], self.params['b1'])
-        x = self.layers['Relu1'].forward()
+            x, self.params['W1'], self.params['b1'])
+        x = self.layers['Relu1'].forward(x)
         x = self.layers['Affine2'].forward(
-            self.params['W2'], self.params['b2'])
+            x, self.params['W2'], self.params['b2'])
         return x
 
     def loss(self, x, t):

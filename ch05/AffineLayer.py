@@ -37,8 +37,8 @@ class AffineLayer:
 
         doutdy: (batch_size, m) matrix (`batch_size` and `m` must be consistent with those of `forward`.)
         """
-        doutdx = np.dot(doutdy, W.T)
-        doutdW = np.dot(x.T, doutdy)
+        doutdx = np.dot(doutdy, self.W.T)
+        doutdW = np.dot(self.x.T, doutdy)
         doutdb = np.sum(doutdy, axis=0)
         return doutdx, doutdW, doutdb
 
