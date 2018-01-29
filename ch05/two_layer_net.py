@@ -1,11 +1,16 @@
+# mod ch04.two_layer_net
+
 import sys
 import os
 sys.path.append(os.pardir)
-from cross_entropy_error_batch import cross_entropy_error
+from ch04.cross_entropy_error_batch import cross_entropy_error
 from ch03.sigmoid import sigmoid
 from ch03.softmax import softmax
-from numerical_gradient_batch import numerical_gradient_batch
+from ch04.numerical_gradient_batch import numerical_gradient_batch
 import numpy as np
+from ch05.AffineLayer import AffineLayer
+from ch05.ReluLayer import ReluLayer
+from ch05.SoftmaxWithLossLayer import SoftmaxWithLossLayer
 
 
 class TwoLayerNet:
@@ -30,17 +35,23 @@ class TwoLayerNet:
             np.random.randn(hidden_size, output_size)
         self.params['b2'] = np.zeros(output_size)
 
+        # layers
+        self.layers = {}
+        self.layers['Affine1'] = AffineLayer()
+        self.layers['Relu1'] = ReluLayer()
+        self.layers['Affine2'] = AffineLayer()
+        self.lastLayer = SoftmaxWithLossLayer()
+
     def predict(self, x):
         """
         x: input to this network(NumPy array)
         """
-        W1, W2 = self.params['W1'], self.params['W2']
-        b1, b2 = self.params['b1'], self.params['b2']
-
-        a1 = np.dot(x, W1) + b1
-        z1 = sigmoid(a1)  # output of layer-1
-        a2 = np.dot(z1, W2)
-        return softmax(a2) # a2.shape is [butch_size, output_size]
+        x = self.layers['Affine1'].forward(
+            self.params['W1'], self.params['b1'])
+        x = self.layers['Relu1'].forward()
+        x = self.layers['Affine2'].forward(
+            self.params['W2'], self.params['b2'])
+        return x
 
     def loss(self, x, t):
         """
@@ -48,7 +59,7 @@ class TwoLayerNet:
         t: teacher data(NumPy array)
         """
 
-        return cross_entropy_error(self.predict(x), t)
+        return self.lastLayer.forward(self.predict(x), t)
 
     def accuracy(self, x, t):
         """
@@ -68,13 +79,38 @@ class TwoLayerNet:
 
     def numerical_gradient(self, x, t):
         # loss_W = lambda W: self.loss(x, t)
-        loss_W = lambda W: self.loss(x, t)
+        def loss_W(W): return self.loss(x, t)
 
         grads = {}
         grads['W1'] = numerical_gradient_batch(loss_W, self.params['W1'])
         grads['b1'] = numerical_gradient_batch(loss_W, self.params['b1'])
         grads['W2'] = numerical_gradient_batch(loss_W, self.params['W2'])
         grads['b2'] = numerical_gradient_batch(loss_W, self.params['b2'])
+        return grads
+
+    def gradient(self, x, t):
+        """
+        Calculate gradient by backpropagation.
+
+        In the textbook, `AffineLayer` has `dW` and `db` fields.
+        That implementation seems simple now...
+        """
+        # forward
+        self.loss(x, t)
+
+        # backward
+        dout = 1
+        dout = self.lastLayer.backward(dout)
+        dout, doutdW2, doutdb2 = self.layers['Affine2'].backward(dout)
+        dout = self.layers['Relu1'].backward(dout)
+        dout, doutdW1, doutdb1 = self.layers['Affine1'].backward(dout)
+
+        grads = {}
+        grads['W1'] = doutdW1
+        grads['b1'] = doutdb1
+        grads['W2'] = doutdW2
+        grads['b2'] = doutdb2
+
         return grads
 
 

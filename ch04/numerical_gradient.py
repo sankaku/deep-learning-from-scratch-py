@@ -1,7 +1,10 @@
 # get the numerical gradient of multivariable function f(x1, x2, ...)
 
+import sys
+import os
+sys.path.append(os.pardir)
 import numpy as np
-from numerical_diff import show
+from ch04.numerical_diff import show
 
 
 def numerical_gradient(f, x):
