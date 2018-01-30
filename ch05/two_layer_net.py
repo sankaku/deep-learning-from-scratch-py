@@ -73,12 +73,12 @@ class TwoLayerNet:
         t_labels = np.argmax(t, axis=1)
 
         num_all = x.shape[0]
-        num_hit = np.sum(y == t)
+        num_hit = np.sum(y_labels == t_labels)
         return num_hit / float(num_all)
 
     def numerical_gradient(self, x, t):
         # loss_W = lambda W: self.loss(x, t)
-        def loss_W(W): return self.loss(x, t)
+        loss_W = lambda W: self.loss(x, t)
 
         grads = {}
         grads['W1'] = numerical_gradient_batch(loss_W, self.params['W1'])
