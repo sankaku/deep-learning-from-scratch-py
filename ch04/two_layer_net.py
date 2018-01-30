@@ -63,7 +63,7 @@ class TwoLayerNet:
         t_labels = np.argmax(t, axis=1)
 
         num_all = x.shape[0]
-        num_hit = np.sum(y == t)
+        num_hit = np.sum(y_labels == t_labels)
         return num_hit / float(num_all)
 
     def numerical_gradient(self, x, t):
