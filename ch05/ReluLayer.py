@@ -7,7 +7,7 @@ class ReluLayer:
 
     def forward(self, x):
         """x: NumPy array"""
-        self.mask = (x <= 0)
+        self.mask = (x > 0)
         return x * self.mask
 
     def backward(self, dout):
