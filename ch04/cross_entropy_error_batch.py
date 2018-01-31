@@ -5,7 +5,7 @@ import numpy as np
 
 def cross_entropy_error(y, t):
     delta = 1e-7  # to avoid log(0)
-    
+
     # if y is not a matrix
     if y.ndim == 1:
         t = t.reshape(1, t.size)
@@ -34,3 +34,14 @@ if __name__ == '__main__':
         y3, cross_entropy_error(y3, t)))
     print('t = {0}, cross_entropy_error = {1}'.format(
         t, cross_entropy_error(t, t)))
+
+    ts = np.array([[0, 0, 1, 0, 0],
+                   [1, 0, 0, 0, 0],
+                   [0, 0, 0, 1, 0]])
+    ys = np.array([[0.1, 0.4, 0.6, 0, 0.3],
+                   [0.3, 0.5, 0.1, 0.7, 0],
+                   [0, 0, 0, 1, 0]])
+
+    print('ts: {0}, ys: {1}'.format(ts.shape, ys.shape))
+    print('ys = {0}, cross_entropy_error = {1}'.format(
+        ys, cross_entropy_error(ys, ts)))

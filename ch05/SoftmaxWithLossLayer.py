@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append(os.pardir)
 from ch03.softmax import softmax
-from ch04.cross_entropy_error import cross_entropy_error
+from ch04.cross_entropy_error_batch import cross_entropy_error
 import numpy as np
 
 
@@ -48,9 +48,9 @@ if __name__ == '__main__':
     print('doutdx = {0}'.format(doutdx))
 
     # forward(batch)
-    x = np.array([[5, 1, 0], [3, 0, 2], [1, 1, 5], [4, 1, 1]]) # x[1] and x[2] have large difference with t
-    t = np.array([1, 0, 0])
-    loss = softmax_with_loss_layer.forward(x, t)
+    xs = np.array([[5, 1, 0], [3, 0, 2], [1, 1, 5], [4, 1, 1]]) # x[1] and x[2] have large difference with t
+    ts = np.array([[1, 0, 0], [0, 1, 0], [1, 0, 0], [1, 0, 0]])
+    loss = softmax_with_loss_layer.forward(xs, ts)
     print('loss = {0}'.format(loss))
 
     # backward
