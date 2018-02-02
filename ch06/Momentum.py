@@ -4,8 +4,8 @@ import sys
 import os
 sys.path.append(os.pardir)
 import numpy as np
-from ch04.numerical_gradient_batch import numerical_gradient_batch
-import matplotlib.pyplot as plt
+from ch06.plot_optimization_process import plot_optimization_process
+
 
 
 class Momentum:
@@ -41,24 +41,5 @@ class Momentum:
 
 
 if __name__ == '__main__':
-    iterate_num = 10000
     optimizer = Momentum()
-
-    f = lambda x: (1/20) * (x[0] ** 2) + x[1] ** 2
-    # Initial params. This is the beginning point.
-    params = {'x': 100.0, 'y': 100.0}
-    params_array = np.array([[params['x'], params['y']]])
-    for i in range(iterate_num):
-        tmp_gradients = numerical_gradient_batch(
-            f, np.array([params['x'], params['y']]))
-        gradients = {'x': tmp_gradients[0], 'y': tmp_gradients[1]}
-        optimizer.update(params, gradients)
-        params_array = np.vstack(
-            (params_array, np.array([params['x'], params['y']])))
-    print(params)
-    print(params_array.shape)
-    x = params_array[:, 0]
-    y = params_array[:, 1]
-    plt.plot(x, y, '.')
-    plt.grid()
-    plt.show()
+    plot_optimization_process(optimizer)
