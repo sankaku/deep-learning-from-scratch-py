@@ -12,13 +12,14 @@ from ch06.SGD import SGD
 import matplotlib.pyplot as plt
 
 
-def train(batch_size, iterate_num, learning_rate):
+def train(batch_size, iterate_num, learning_rate, weight_decay_lambda=0.0):
     """
     MNIST training with too many network parameters and too small dataset
 
     batch_size: data of this number are choosed from training data in each step
     iterate_num: the number of iteration for backpropagation
     learning_rate: learning rate for backpropagation
+    weight_decay_lambda: coefficient of L2-norm weight decay
     """
     # get training data and test data(test data are not used below.)
     (x_train, t_train), (x_test, t_test) = load_mnist(
@@ -31,9 +32,10 @@ def train(batch_size, iterate_num, learning_rate):
     t_train = t_train[:300]
 
     # initialized MultiLayerNet
-    hidden_size_list = [100, 100]  # many layers to overfit
+    hidden_size_list = [100]  # many layers to overfit
     # each image has 28*28 pixels
-    network = MultiLayerNet(28 * 28, hidden_size_list, 10)
+    network = MultiLayerNet(28 * 28, hidden_size_list,
+                            10, weight_decay_lambda=weight_decay_lambda)
 
     # accuracies
     train_accuracies = []

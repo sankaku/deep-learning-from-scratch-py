@@ -59,7 +59,7 @@ class AffineLayer:
 
 
 class MultiLayerNet:
-    def __init__(self, input_size, hidden_size_list, output_size, weight_init_std=0.01):
+    def __init__(self, input_size, hidden_size_list, output_size, weight_init_std=0.01, weight_decay_lambda=0.0):
         """
         Initialize n-layers network.
 
@@ -70,7 +70,9 @@ class MultiLayerNet:
         hidden_size_list: the numbers of neurons in layer-1, 2, ..., n-1(hidden layers)
         output_size: the number of neurons in layer-n(output of this network)
         weight_init_std: weight to the weight matrices
+        weight_decay_lambda: coefficient of L2-norm weight decay(lambda * W**2 /2)
         """
+        self.weight_decay_lambda = weight_decay_lambda
 
         self.hidden_size_list = hidden_size_list
         hidden_layers_num = len(self.hidden_size_list)
@@ -106,7 +108,11 @@ class MultiLayerNet:
         x: input(NumPy array)
         t: teacher data(NumPy array)
         """
-        return self.lastLayer.forward(self.predict(x), t)
+        weight_decay = 0
+        for index in range(1, len(self.hidden_size_list) + 2):
+            W = self.params['W{0}'.format(index)]
+            weight_decay += (1 / 2) * self.weight_decay_lambda * np.sum(W**2)
+        return self.lastLayer.forward(self.predict(x), t) + weight_decay
 
     def accuracy(self, x, t):
         """
@@ -143,7 +149,8 @@ class MultiLayerNet:
         for index in range(1, len(self.hidden_size_list) + 2):
             dW = self.layers['Affine{0}'.format(index)].dW
             db = self.layers['Affine{0}'.format(index)].db
-            grads['W{0}'.format(index)] = dW
+            grads['W{0}'.format(
+                index)] = dW + self.weight_decay_lambda * self.layers['Affine{0}'.format(index)].W
             grads['b{0}'.format(index)] = db
 
         return grads
