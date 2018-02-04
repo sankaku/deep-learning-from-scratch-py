@@ -11,14 +11,11 @@ import matplotlib.pyplot as plt
 
 def train(batch_size, iterate_num, learning_rate):
     """
-    Get the appropriate network parameters (weights, biases) by gradient method.
-
-    In the process of gradient method,
-    training data are choosed randomly in each step(mini-batch gradient method).
+    Get the appropriate network parameters (weights, biases) by backpropagation.
 
     batch_size: data of this number are choosed from training data in each step
-    iterate_num: the number of iteration for gradient method
-    learning_rate: learning rate for gradient method
+    iterate_num: the number of iteration for backpropagation
+    learning_rate: learning rate for backpropagation
     """
     # get training data and test data(test data are not used below.)
     (x_train, t_train), (x_test, t_test) = load_mnist(
