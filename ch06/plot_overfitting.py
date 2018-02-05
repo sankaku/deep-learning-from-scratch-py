@@ -32,7 +32,7 @@ def train(batch_size, iterate_num, learning_rate, weight_decay_lambda=0.0):
     t_train = t_train[:300]
 
     # initialized MultiLayerNet
-    hidden_size_list = [100]  # many layers to overfit
+    hidden_size_list = [100, 100, 100, 100, 100, 100]  # many layers to overfit
     # each image has 28*28 pixels
     network = MultiLayerNet(28 * 28, hidden_size_list,
                             10, weight_decay_lambda=weight_decay_lambda)
@@ -58,7 +58,7 @@ def train(batch_size, iterate_num, learning_rate, weight_decay_lambda=0.0):
         optimizer.update(network.params, grads)
 
         # record accuracy
-        if i % (iterate_num / epoch_size) == 0:
+        if i % epoch_size == 0:
             train_accuracy = network.accuracy(x_train, t_train)
             test_accuracy = network.accuracy(x_test, t_test)
             train_accuracies.append(train_accuracy)

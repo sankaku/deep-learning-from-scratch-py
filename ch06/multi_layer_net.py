@@ -81,7 +81,9 @@ class MultiLayerNet:
         self.params = {}
         all_size_list = [input_size] + self.hidden_size_list + [output_size]
         for index in range(1, len(all_size_list)):
-            self.params['W{0}'.format(index)] = weight_init_std * \
+            # He init
+            weight_init_he = np.sqrt(2 / all_size_list[index - 1])
+            self.params['W{0}'.format(index)] = weight_init_he * \
                 np.random.randn(all_size_list[index - 1], all_size_list[index])
             self.params['b{0}'.format(index)] = np.zeros(all_size_list[index])
 
@@ -91,8 +93,9 @@ class MultiLayerNet:
             self.layers['Affine{0}'.format(index)] = AffineLayer(
                 self.params['W{0}'.format(index)], self.params['b{0}'.format(index)])
             self.layers['Relu{0}'.format(index)] = ReluLayer()
-        self.layers['Affine{0}'.format(hidden_layers_num + 1)] = AffineLayer(self.params['W{0}'.format(
-            hidden_layers_num + 1)], self.params['b{0}'.format(hidden_layers_num + 1)])
+        last_index = hidden_layers_num + 1
+        self.layers['Affine{0}'.format(last_index)] = AffineLayer(
+            self.params['W{0}'.format(last_index)], self.params['b{0}'.format(last_index)])
         self.lastLayer = SoftmaxWithLossLayer()
 
     def predict(self, x):
