@@ -12,7 +12,7 @@ from ch06.SGD import SGD
 import matplotlib.pyplot as plt
 
 
-def train(batch_size, iterate_num, learning_rate, weight_decay_lambda=0.0):
+def train(batch_size, iterate_num, learning_rate, weight_decay_lambda=0.0, dropout_ratio=0.0):
     """
     MNIST training with too many network parameters and too small dataset
 
@@ -35,7 +35,7 @@ def train(batch_size, iterate_num, learning_rate, weight_decay_lambda=0.0):
     hidden_size_list = [100, 100, 100, 100, 100, 100]  # many layers to overfit
     # each image has 28*28 pixels
     network = MultiLayerNet(28 * 28, hidden_size_list,
-                            10, weight_decay_lambda=weight_decay_lambda)
+                            10, weight_decay_lambda=weight_decay_lambda, dropout_ratio=dropout_ratio)
 
     # accuracies
     train_accuracies = []

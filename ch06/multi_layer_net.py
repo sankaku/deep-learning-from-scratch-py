@@ -9,6 +9,7 @@ from ch04.numerical_gradient_batch import numerical_gradient_batch
 import numpy as np
 from ch05.ReluLayer import ReluLayer
 from ch05.SoftmaxWithLossLayer import SoftmaxWithLossLayer
+from ch06.DropoutLayer import DropoutLayer
 from collections import OrderedDict
 
 
@@ -59,7 +60,7 @@ class AffineLayer:
 
 
 class MultiLayerNet:
-    def __init__(self, input_size, hidden_size_list, output_size, weight_init_std=0.01, weight_decay_lambda=0.0):
+    def __init__(self, input_size, hidden_size_list, output_size, weight_init_std=0.01, weight_decay_lambda=0.0, dropout_ratio=0.0):
         """
         Initialize n-layers network.
 
@@ -93,6 +94,7 @@ class MultiLayerNet:
             self.layers['Affine{0}'.format(index)] = AffineLayer(
                 self.params['W{0}'.format(index)], self.params['b{0}'.format(index)])
             self.layers['Relu{0}'.format(index)] = ReluLayer()
+            self.layers['Dropout{0}'.format(index)] = DropoutLayer(dropout_ratio=dropout_ratio)
         last_index = hidden_layers_num + 1
         self.layers['Affine{0}'.format(last_index)] = AffineLayer(
             self.params['W{0}'.format(last_index)], self.params['b{0}'.format(last_index)])
