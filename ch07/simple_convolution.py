@@ -1,0 +1,38 @@
+# Simple Convolution
+#
+# implement to understand the works of Convolution layer
+
+import numpy as np
+
+
+def convolute(x, filters, padding=0, stride=1):
+    """
+    Convolute input with filters
+
+    x: (channels, height, width)-tensor input
+    filters: (channels, filter_heights, filter_width)-tensor
+    padding: Width to expand the edge of input. Expanded areas are padding with 0
+    stride: Width to slide filter
+    """
+
+    channels = x.shape[0]
+    height = x.shape[1]
+    width = x.shape[2]
+
+    if filters.shape[0] != channels:
+        raise ValueError('Channel numbers of filters must be equal to that of x.: x.shape = {0}, filters.shape = {1}'.format(
+            x.shape, filters.shape))
+    filter_heights = filters.shape[1]
+    filter_width = filters.shape[2]
+
+
+def pad(x, padding):
+    """
+    pad with `pad_val`
+
+    (channels, height, width) -> (channels, height + 2*padding, width + 2*padding)
+    x: (channels, height, width)-tensor
+    padding: padding size for `height` and `width`
+    """
+    pad_val = 0
+    return np.pad(x, pad_width=[(0, 0), (padding, padding), (padding, padding)], mode='constant', constant_values=pad_val)
