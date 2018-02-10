@@ -29,6 +29,10 @@ def convolute(x, filters, padding=0, stride=1):
         height, width, filter_height, filter_width, padding, stride)
     output = np.zeros([channels, output_height, output_width])
 
+    # padding
+    x = pad(x, padding)
+
+    # convolute
     for oh_num in range(output_height):
         for ow_num in range(output_width):
             tmp_h = stride * oh_num

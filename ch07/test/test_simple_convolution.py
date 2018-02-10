@@ -72,6 +72,7 @@ class TestSimpleConvolution(unittest.TestCase):
         """
         x.shape = (3, 4, 5)
         filters.shape = (3, 2, 3)
+        stride = 2
         """
         x = np.arange(3 * 4 * 5).reshape(3, 4, 5)
         filters = np.array([[[1,  0,  0], [0,  1,  0]],
@@ -82,6 +83,22 @@ class TestSimpleConvolution(unittest.TestCase):
         expected = np.array([[[6,  10.], [26,  30]],
                              [[47,  51], [67,  71]],
                              [[88,  92], [108, 112]]])
+
+        np.testing.assert_array_equal(actual, expected)
+
+    def test_convolute_3(self):
+        """
+        x.shape = (2, 1, 3)
+        filters.shape = (2, 2, 2)
+        padding = 2
+        """
+        x = np.arange(2 * 1 * 3).reshape(2, 1, 3)
+        filters = np.array([[[1,  0], [0,  1]],
+                            [[0,  1], [1,  0]]])
+
+        actual = convolute(x, filters, padding=2, stride=1)
+        expected = np.array([[[0, 0, 0, 0, 0, 0], [0, 0, 1, 2, 0, 0], [0, 0, 0, 1, 2, 0], [0, 0, 0, 0, 0, 0]],
+                             [[0, 0, 0, 0, 0, 0], [0, 0, 3, 4, 5, 0], [0, 3, 4, 5, 0, 0], [0, 0, 0, 0, 0, 0]]])
 
         np.testing.assert_array_equal(actual, expected)
 
