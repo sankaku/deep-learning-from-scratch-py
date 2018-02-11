@@ -10,26 +10,26 @@ class TestSimpleConvolution(unittest.TestCase):
 
     def test_pad_1(self):
         """
-        test with (2, 2, 2)-tensor
+        test with (1, 2, 2, 2)-tensor
         """
-        x = np.array([[[1,  2], [3,  4]],
-                      [[5,  6], [7,  8]]])
+        x = np.array([[[[1,  2], [3,  4]],
+                       [[5,  6], [7,  8]]]])
         padding = 1
         actual = pad(x, padding)
-        expected = np.array([[[0, 0, 0, 0], [0, 1, 2, 0], [0, 3, 4, 0], [0, 0, 0, 0]], [
-                            [0, 0, 0, 0], [0, 5, 6, 0], [0, 7, 8, 0], [0, 0, 0, 0]]])
+        expected = np.array([[[[0, 0, 0, 0], [0, 1, 2, 0], [0, 3, 4, 0], [0, 0, 0, 0]], [
+                            [0, 0, 0, 0], [0, 5, 6, 0], [0, 7, 8, 0], [0, 0, 0, 0]]]])
 
         np.testing.assert_array_equal(actual, expected)
 
     def test_pad_2(self):
         """
-        test with (1, 2, 2)-tensor
+        test with (1, 1, 2, 2)-tensor
         """
-        x = np.array([[[1,  2], [3,  4]]])
+        x = np.array([[[[1,  2], [3,  4]]]])
         padding = 1
         actual = pad(x, padding)
         expected = np.array(
-            [[[0, 0, 0, 0], [0, 1, 2, 0], [0, 3, 4, 0], [0, 0, 0, 0]]])
+            [[[[0, 0, 0, 0], [0, 1, 2, 0], [0, 3, 4, 0], [0, 0, 0, 0]]]])
 
         np.testing.assert_array_equal(actual, expected)
 
@@ -57,48 +57,71 @@ class TestSimpleConvolution(unittest.TestCase):
         """
         simple test
 
-        x.shape == filters.shape
+        x.shape == filters.shape(except for batches)
         """
-        x = np.array([[[1,  2], [3,  4]],
-                      [[5,  6], [7,  8]]])
+        x = np.array([[[[1,  2], [3,  4]],
+                       [[5,  6], [7,  8]]]])
         filters = np.array([[[1,  0], [2,  0]],
                             [[3,  0], [4,  0]]])
         actual = convolute(x, filters, padding=0, stride=1)
-        expected = np.array([[[7]], [[43]]])
+        expected = np.array([[[[7]], [[43]]]])
 
         np.testing.assert_array_equal(actual, expected)
 
     def test_convolute_2(self):
         """
-        x.shape = (3, 4, 5)
+        x.shape = (1, 3, 4, 5)
         filters.shape = (3, 2, 3)
         stride = 2
         """
-        x = np.arange(3 * 4 * 5).reshape(3, 4, 5)
+        x = np.arange(3 * 4 * 5).reshape(1, 3, 4, 5)
         filters = np.array([[[1,  0,  0], [0,  1,  0]],
                             [[0,  0,  1], [1,  0,  0]],
                             [[0,  1,  0], [0,  0,  1]]])
 
         actual = convolute(x, filters, padding=0, stride=2)
-        expected = np.array([[[6,  10.], [26,  30]],
-                             [[47,  51], [67,  71]],
-                             [[88,  92], [108, 112]]])
+        expected = np.array([[[[6,  10.], [26,  30]],
+                              [[47,  51], [67,  71]],
+                              [[88,  92], [108, 112]]]])
 
         np.testing.assert_array_equal(actual, expected)
 
     def test_convolute_3(self):
         """
-        x.shape = (2, 1, 3)
+        x.shape = (1, 2, 1, 3)
         filters.shape = (2, 2, 2)
         padding = 2
         """
-        x = np.arange(2 * 1 * 3).reshape(2, 1, 3)
+        x = np.arange(2 * 1 * 3).reshape(1, 2, 1, 3)
         filters = np.array([[[1,  0], [0,  1]],
                             [[0,  1], [1,  0]]])
 
         actual = convolute(x, filters, padding=2, stride=1)
-        expected = np.array([[[0, 0, 0, 0, 0, 0], [0, 0, 1, 2, 0, 0], [0, 0, 0, 1, 2, 0], [0, 0, 0, 0, 0, 0]],
-                             [[0, 0, 0, 0, 0, 0], [0, 0, 3, 4, 5, 0], [0, 3, 4, 5, 0, 0], [0, 0, 0, 0, 0, 0]]])
+        expected = np.array([[[[0, 0, 0, 0, 0, 0], [0, 0, 1, 2, 0, 0], [0, 0, 0, 1, 2, 0], [0, 0, 0, 0, 0, 0]],
+                              [[0, 0, 0, 0, 0, 0], [0, 0, 3, 4, 5, 0], [0, 3, 4, 5, 0, 0], [0, 0, 0, 0, 0, 0]]]])
+
+        np.testing.assert_array_equal(actual, expected)
+
+    def test_convolute_4(self):
+        """
+        x.shape = (3, 2, 1, 3)
+        filters.shape = (2, 2, 2)
+        padding = 2
+        """
+        single = np.arange(2 * 1 * 3).reshape(1, 2, 1, 3)
+        x = single.copy()
+        x = np.append(x, single, axis=0)
+        x = np.append(x, single, axis=0)
+        filters = np.array([[[1,  0], [0,  1]],
+                            [[0,  1], [1,  0]]])
+
+        actual = convolute(x, filters, padding=2, stride=1)
+        expected = np.array([[[[0, 0, 0, 0, 0, 0], [0, 0, 1, 2, 0, 0], [0, 0, 0, 1, 2, 0], [0, 0, 0, 0, 0, 0]],
+                              [[0, 0, 0, 0, 0, 0], [0, 0, 3, 4, 5, 0], [0, 3, 4, 5, 0, 0], [0, 0, 0, 0, 0, 0]]],
+                             [[[0, 0, 0, 0, 0, 0], [0, 0, 1, 2, 0, 0], [0, 0, 0, 1, 2, 0], [0, 0, 0, 0, 0, 0]],
+                              [[0, 0, 0, 0, 0, 0], [0, 0, 3, 4, 5, 0], [0, 3, 4, 5, 0, 0], [0, 0, 0, 0, 0, 0]]],
+                             [[[0, 0, 0, 0, 0, 0], [0, 0, 1, 2, 0, 0], [0, 0, 0, 1, 2, 0], [0, 0, 0, 0, 0, 0]],
+                              [[0, 0, 0, 0, 0, 0], [0, 0, 3, 4, 5, 0], [0, 3, 4, 5, 0, 0], [0, 0, 0, 0, 0, 0]]]])
 
         np.testing.assert_array_equal(actual, expected)
 
